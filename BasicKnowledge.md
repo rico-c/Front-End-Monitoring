@@ -112,7 +112,7 @@ window.addEventListener('error', (error) => {
    });
    ```
 
-### 重写`XMLHttpRequest`对象的方法
+#### 重写`XMLHttpRequest`对象的方法
 
 该方法主要针对AJAX请求异常,附上参考代码：
 
