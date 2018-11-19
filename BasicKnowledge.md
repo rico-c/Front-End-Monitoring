@@ -102,7 +102,7 @@ window.addEventListener('error', (error) => {
 
 这里说一下需要注意的点:
 
-1. 没有写catch的Promise中抛出的错误无法被onerror 或 try-catch捕获到，所以我们务必要在Promise中不要忘记写catch处理抛出的异常。
+没有写catch的Promise中抛出的错误无法被onerror 或 try-catch捕获到，所以我们务必要在Promise中不要忘记写catch处理抛出的异常。
 
    **解决方案：**为了防止有漏掉的Promise异常，建议在全局增加一个对`unhandledrejection`的监听，用来全局监听Uncaught Promise Error。使用方式：
 
@@ -164,9 +164,9 @@ VUE和React都分别提供了对应的错误处理钩子，由于笔者使用VUE
 
 > 指定组件的渲染和观察期间未捕获错误的处理函数。这个处理函数被调用时，可获取错误信息和 Vue 实例。
 >
-> > 从 2.2.0 起，这个钩子也会捕获组件生命周期钩子里的错误。同样的，当这个钩子是 `undefined` 时，被捕获的错误会通过 `console.error` 输出而避免应用崩溃。
+>  从 2.2.0 起，这个钩子也会捕获组件生命周期钩子里的错误。同样的，当这个钩子是 `undefined` 时，被捕获的错误会通过 `console.error` 输出而避免应用崩溃。
 >
-> > 从 2.4.0 起这个钩子也会捕获 Vue 自定义事件处理函数内部的错误了。
+>  从 2.4.0 起这个钩子也会捕获 Vue 自定义事件处理函数内部的错误了。
 
 下面我们看一下实际情况：
 
@@ -222,7 +222,7 @@ window.onerror = function (message, source, lineno, colno, error) {
 
 这时我们可以尝试进入webpack配置，设置`devtool:"source-map"`,这时在控制台再次打印可以看见成功捕获到绑定事件的错误。
 
-![](http://www.ricofishing.com/img/err4.jpg)
+![](https://ricardocao-biker.github.io/IMGS/err4.jpg)
 
 ### 错误上报
 
