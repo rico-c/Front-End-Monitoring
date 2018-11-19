@@ -1,5 +1,5 @@
+<h1>前端监控知识点</h1>
 ### 我们的目标是什么？
-首先，明确一下目标：
 将用户在使用网页服务时产生的影响用户体验的异常通过网络请求传回服务器，并进行可视化的展现，整个过程要求我们回传的错误信息包含错误类型、调用堆栈等错误信息以便开发人员定位错误。
 
 ### 需上报的错误类型有几种？
@@ -84,11 +84,11 @@ window.addEventListener('error', (error) => {
 
 运行时错误：
 
-![](https://ricardocao-biker.github.io/IMGS/err2.jpg)
+![](https://ricardocao-biker.github.io/IMGS/err2.jpg)
 
 资源加载错误：
 
-![](https://ricardocao-biker.github.io/IMGS/err3.jpg)
+![](https://ricardocao-biker.github.io/IMGS/err3.jpg)
 
 使用时需要注意的点：
 
@@ -198,7 +198,7 @@ Vue.config.errorHandler = (err, vm, info) => {
 }
 ```
 
-![](https://ricardocao-biker.github.io/IMGS/err1.jpg)
+![](https://ricardocao-biker.github.io/IMGS/err1.jpg)
 
 可以看到生命周期钩子里的错误是可以被errorHandler捕获到，但是当我们主动点击div触发clickerror时，这时错误并没有被errorHandler捕获到，所以需要注意的是，errorHandler方法目前还捕获不到绑定事件触发的异常。
 
@@ -217,7 +217,7 @@ window.onerror = function (message, source, lineno, colno, error) {
 
 在MVVM框架中使用onerror监听全局异常会发现并不能捕获到绑定事件的详细错误信息，只会输出Script Error，
 
-![](https://ricardocao-biker.github.io/IMGS/err5.jpg)
+![](https://ricardocao-biker.github.io/IMGS/err5.jpg)
 
 这时我们可以尝试进入webpack配置，设置`devtool:"source-map"`,这时在控制台再次打印可以看见成功捕获到绑定事件的错误。
 
