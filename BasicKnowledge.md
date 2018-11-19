@@ -201,7 +201,7 @@ Vue.config.errorHandler = (err, vm, info) => {
 
 ![](https://ricardocao-biker.github.io/IMGS/err1.jpg)
 
-可以看到生命周期钩子里的错误是可以被errorHandler捕获到，但是当我们主动点击div触发clickerror时，这时错误并没有被errorHandler捕获到，所以需要注意的是，errorHandler方法目前还捕获不到绑定事件触发的异常。
+可以看到生命周期钩子里的错误是可以被errorHandler捕获到，但是当我们主动点击div触发clickerror时，会发现这时错误并没有被errorHandler捕获到，控制台输出的是Uncaught Error，也就是没有被捕获到的错误，所以需要注意的是，errorHandler方法目前还捕获不到绑定监听事件触发的异常，但是可以捕获到在生命周期钩子中调用的方法的错误。
 
 **解决方案**：使用window.onerror
 
