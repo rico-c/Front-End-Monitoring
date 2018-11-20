@@ -33,7 +33,7 @@
 
 1. try-catch 只能捕获到同步的运行时错误，其他类型无法捕获
 
-   **解决方案：**onerror都可以捕获到运行时的同步/异步错误
+   **解决方案：** onerror都可以捕获到运行时的同步/异步错误
 
 #### onerror
 >当JavaScript运行时错误（包括语法错误）发生时，window会触发一个ErrorEvent接口的error事件，并执行window.onerror()。
