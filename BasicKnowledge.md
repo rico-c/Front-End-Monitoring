@@ -71,7 +71,7 @@ window.onerror = function(message, source, lineno, colno, error) {
 
 #### addEventListener
 
-> 当一项资源（如img或<script>）加载失败，加载资源的元素会触发一个Event接口的error事件，并执行该元素上的onerror()处理函数。这些error事件不会向上冒泡到window，不过（至少在Firefox中）能被单一的window.addEventListener捕获。
+> 当一项资源（如图片或脚本）加载失败，加载资源的元素会触发一个Event接口的error事件，并执行该元素上的onerror()处理函数。这些error事件不会向上冒泡到window，不过（至少在Firefox中）能被单一的window.addEventListener捕获。
 
 使用方式如下：
 
