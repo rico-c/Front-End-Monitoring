@@ -61,7 +61,7 @@ window.onerror = function(message, source, lineno, colno, error) {
     - 需要在跨域的script标签中加入`crossorigin`属性，例如`<script type="text/javascript" src="example.js" crossorigin></script>`
     - 需要给跨域资源的服务器的response header设置允许跨域：`Access-Control-Allow-Origin:*`
 
-2. 不能全局捕获到资源（如<img>或<script>）的加载失败
+2. 不能全局捕获到资源（如图片或脚本）的加载失败
 
    **解决方案：** 使用`window.addEventListener`捕获。
 
