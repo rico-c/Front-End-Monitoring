@@ -145,7 +145,7 @@ var BJ_REPORT = (function (global) {
         isOBJByType: function (o, type) {
             return Object.prototype.toString.call(o) === "[object " + (type || "Object") + "]";
         },
-        // 数据类型为泛对象
+        // 数据类型为对象
         isOBJ: function (obj) {
             var type = typeof obj;
             return type === "object" && !!obj;
@@ -158,12 +158,17 @@ var BJ_REPORT = (function (global) {
             }
             return !obj;
         },
+        // 复制对象
         extend: function (src, source) {
             for (var key in source) {
                 src[key] = source[key];
             }
             return src;
         },
+
+        /** 
+         * 整理error对象，如果没问题直接走return errObj通过
+        */
         processError: function (errObj) {
             try {
                 if (errObj.stack) {
@@ -195,6 +200,7 @@ var BJ_REPORT = (function (global) {
                 return errObj;
             }
         },
+
         /** 
          * onerror中的msg参数只有简单的错误信息描述，类似：'Uncaught Error: 抛出click错误'
          * error参数为包含堆栈信息的对象，需要使用该方法将error对象的堆栈转为字符串输出
@@ -212,7 +218,7 @@ var BJ_REPORT = (function (global) {
             }
             return stack;
         },
-        // 是否查过配置的最多重复上报次数
+        // 是否超过配置的最多重复上报次数
         isRepeat: function (error) {
             if (!T.isOBJ(error)) return true;
             var msg = error.msg;
@@ -248,7 +254,7 @@ var BJ_REPORT = (function (global) {
         _process_log();
         orgError && orgError.apply(global, arguments);
     };
-
+    // 将错误对象生成字符串，返回将三种不同格式的转译字符串的接口的数组
     var _report_log_tostring = function (error, index) {
         var param = [];
         var params = [];
@@ -271,10 +277,6 @@ var BJ_REPORT = (function (global) {
                 }
             }
         }
-
-        // msg[0]=msg&target[0]=target -- combo report
-        // msg:msg,target:target -- ignore
-        // msg=msg&target=target -- report with out combo
         return [params.join("&"), stringify.join(","), param.join("&")];
     };
 
@@ -286,7 +288,6 @@ var BJ_REPORT = (function (global) {
             Offline_DB.addLog(msgObj);
             return;
         }
-
 
         if (!Offline_DB.db && !_offline_buffer.length) {
             Offline_DB.ready(function (err, DB) {
@@ -315,12 +316,12 @@ var BJ_REPORT = (function (global) {
 
     var submit_log_list = [];
     var comboTimeout = 0;
+
     /** 
      * 上报异常队列
     */
     var _submit_log = function () {
         clearTimeout(comboTimeout);
-        // https://github.com/BetterJS/badjs-report/issues/34
         comboTimeout = 0;
         // 没有上报队列则退出函数
         if (!submit_log_list.length) {
@@ -339,6 +340,10 @@ var BJ_REPORT = (function (global) {
         submit_log_list = [];
     };
 
+    /** 
+     * 将_log_list中的错误对象队列依次字符串化
+     * 并调用_submit_log方法拼接url提交错误给服务器
+    */
     var _process_log = function (isReportNow) {
         // 是否设置了异常上班接口并完成初始化
         if (!_config._reportUrl) return;
@@ -347,12 +352,15 @@ var BJ_REPORT = (function (global) {
 
         while (_log_list.length) {
             var isIgnore = false;
+            // 取出上报队列首位
             var report_log = _log_list.shift();
-            //有效保证字符不要过长
+            // 保证msg错误信息字符不要过长
             report_log.msg = (report_log.msg + "" || "").substr(0, 500);
             // 重复上报
             if (T.isRepeat(report_log)) continue;
+            // 将被取出的首位错误对象转为字符串
             var log_str = _report_log_tostring(report_log, submit_log_list.length);
+            // 处理配置中已设置忽略的错误类型
             if (T.isOBJByType(_config.ignore, "Array")) {
                 for (var i = 0, l = _config.ignore.length; i < l; i++) {
                     var rule = _config.ignore[i];
@@ -366,26 +374,29 @@ var BJ_REPORT = (function (global) {
             if (!isIgnore) {
                 _config.offlineLog && _save2Offline("badjs_" + _config.id + _config.uin, report_log);
                 if (!randomIgnore && report_log.level != 20) {
+                    // 在submit_log_list队列中推入URI编码后的字符串处理后的错误对象，准备作为url参数提交给服务器
                     submit_log_list.push(log_str[0]);
                     _config.onReport && (_config.onReport(_config.id, report_log));
                 }
 
             }
         }
-
+        // 立即上报，本套代码中只有在主动手动上报时可以设置立即上报参数，否则默认延迟上报
         if (isReportNow) {
-            _submit_log(); // 立即上报
+            _submit_log();
         } else if (!comboTimeout) {
-            comboTimeout = setTimeout(_submit_log, _config.delay); // 延迟上报
+            // 延迟配置中设置的时延后上报
+            comboTimeout = setTimeout(_submit_log, _config.delay);
         }
     };
 
     var report = global.BJ_REPORT = {
         /** 
-         * 将错误推到缓存池 延迟上报
+         * 将错误推到_log_list缓存池
         */
         push: function (msg) {
-
+            // onerror自动捕获时，进入processError，补齐error对象基本信息
+            // 手动主动上报异常时，将手动输入的异常信息的字符串包裹至对象中形成data
             var data = T.isOBJ(msg) ? T.processError(msg) : {
                 msg: msg
             };
@@ -395,11 +406,13 @@ var BJ_REPORT = (function (global) {
                 data.ext = _config.ext;
             }
             // 在错误发生时获取页面链接
-            // https://github.com/BetterJS/badjs-report/issues/19
             if (!data.from) {
                 data.from = location.href;
             }
-
+            /**
+             * 将Uncaught错误信息和处理过的错误信息同时推入_log_list，
+             * 准备进入_process_log方法进行字符串化并拼接发送
+             */
             if (data._orgMsg) {
                 var _orgMsg = data._orgMsg;
                 delete data._orgMsg;
@@ -443,6 +456,7 @@ var BJ_REPORT = (function (global) {
             report.push(msg);
             return report;
         },
+
         /**
          * 可以结合实时上报，跟踪问题; 不存入存储
         */
@@ -531,6 +545,7 @@ var BJ_REPORT = (function (global) {
             report.push(msg);
             return report;
         },
+
         /**
          * 初始化
         */
@@ -562,6 +577,7 @@ var BJ_REPORT = (function (global) {
             }
 
             // if had error in cache , report now
+            // 初始化时如果队列中有异常立即上报
             if (_log_list.length) {
                 _process_log();
             }
@@ -581,15 +597,10 @@ var BJ_REPORT = (function (global) {
 
                 });
             }
-
-
-
             return report;
         },
-
         __onerror__: global.onerror
     };
-
 
     typeof console !== "undefined" && console.error && setTimeout(function () {
         var err = ((location.hash || "").match(/([#&])BJ_ERROR=([^&$]+)/) || [])[2];
