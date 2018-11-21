@@ -1,11 +1,4 @@
-/*!
- * @module report
- * @author kael, chriscai
- * @date @DATE
- * Copyright (c) 2014 kael, chriscai
- * Licensed under the MIT license.
- */
-var BJ_REPORT = (function(global) {
+var BJ_REPORT = (function (global) {
     if (global.BJ_REPORT) return global.BJ_REPORT;
 
     var _log_list = [];
@@ -30,7 +23,7 @@ var BJ_REPORT = (function(global) {
 
     var Offline_DB = {
         db: null,
-        ready: function(callback) {
+        ready: function (callback) {
             var self = this;
             if (!window.indexedDB || !_config.offlineLog) {
                 _config.offlineLog = false;
@@ -38,7 +31,7 @@ var BJ_REPORT = (function(global) {
             }
 
             if (this.db) {
-                setTimeout(function() {
+                setTimeout(function () {
                     callback(null, self);
                 }, 0);
 
@@ -52,39 +45,39 @@ var BJ_REPORT = (function(global) {
                 return callback();
             }
 
-            request.onerror = function(e) {
+            request.onerror = function (e) {
                 callback(e);
                 _config.offlineLog = false;
                 console.log("indexdb request error");
                 return true;
             };
-            request.onsuccess = function(e) {
+            request.onsuccess = function (e) {
                 self.db = e.target.result;
 
-                setTimeout(function() {
+                setTimeout(function () {
                     callback(null, self);
                 }, 500);
 
 
             };
-            request.onupgradeneeded = function(e) {
+            request.onupgradeneeded = function (e) {
                 var db = e.target.result;
                 if (!db.objectStoreNames.contains('logs')) {
                     db.createObjectStore('logs', { autoIncrement: true });
                 }
             };
         },
-        insertToDB: function(log) {
+        insertToDB: function (log) {
             var store = this.getStore();
             store.add(log);
         },
-        addLog: function(log) {
+        addLog: function (log) {
             if (!this.db) {
                 return;
             }
             this.insertToDB(log);
         },
-        addLogs: function(logs) {
+        addLogs: function (logs) {
             if (!this.db) {
                 return;
             }
@@ -94,14 +87,14 @@ var BJ_REPORT = (function(global) {
             }
 
         },
-        getLogs: function(opt, callback) {
+        getLogs: function (opt, callback) {
             if (!this.db) {
                 return;
             }
             var store = this.getStore();
             var request = store.openCursor();
             var result = [];
-            request.onsuccess = function(event) {
+            request.onsuccess = function (event) {
                 var cursor = event.target.result;
                 if (cursor) {
                     if (cursor.value.time >= opt.start && cursor.value.time <= opt.end && cursor.value.id == opt.id && cursor.value.uin == opt.uin) {
@@ -114,12 +107,12 @@ var BJ_REPORT = (function(global) {
                 }
             };
 
-            request.onerror = function(e) {
+            request.onerror = function (e) {
                 callback(e);
                 return true;
             };
         },
-        clearDB: function(daysToMaintain) {
+        clearDB: function (daysToMaintain) {
             if (!this.db) {
                 return;
             }
@@ -131,7 +124,7 @@ var BJ_REPORT = (function(global) {
             }
             var range = (Date.now() - (daysToMaintain || 2) * 24 * 3600 * 1000);
             var request = store.openCursor();
-            request.onsuccess = function(event) {
+            request.onsuccess = function (event) {
                 var cursor = event.target.result;
                 if (cursor && (cursor.value.time < range || !cursor.value.time)) {
                     store["delete"](cursor.primaryKey);
@@ -140,7 +133,7 @@ var BJ_REPORT = (function(global) {
             };
         },
 
-        getStore: function() {
+        getStore: function () {
             var transaction = this.db.transaction("logs", 'readwrite');
             return transaction.objectStore("logs");
         },
@@ -148,30 +141,30 @@ var BJ_REPORT = (function(global) {
     };
 
     var T = {
-    	// 判断数据类型
-        isOBJByType: function(o, type) {
+        // 判断数据类型
+        isOBJByType: function (o, type) {
             return Object.prototype.toString.call(o) === "[object " + (type || "Object") + "]";
         },
         // 数据类型为泛对象
-        isOBJ: function(obj) {
+        isOBJ: function (obj) {
             var type = typeof obj;
             return type === "object" && !!obj;
         },
         // 判断空对象
-        isEmpty: function(obj) {
+        isEmpty: function (obj) {
             if (obj === null) return true;
             if (T.isOBJByType(obj, "Number")) {
                 return false;
             }
             return !obj;
         },
-        extend: function(src, source) {
+        extend: function (src, source) {
             for (var key in source) {
                 src[key] = source[key];
             }
             return src;
         },
-        processError: function(errObj) {
+        processError: function (errObj) {
             try {
                 if (errObj.stack) {
                     var url = errObj.stack.match("https?://[^\n]+");
@@ -202,8 +195,11 @@ var BJ_REPORT = (function(global) {
                 return errObj;
             }
         },
-        // 将error对象的堆栈信息格式化
-        processStackMsg: function(error) {
+        /** 
+         * onerror中的msg参数只有简单的错误信息描述，类似：'Uncaught Error: 抛出click错误'
+         * error参数为包含堆栈信息的对象，需要使用该方法将error对象的堆栈转为字符串输出
+        */
+        processStackMsg: function (error) {
             var stack = error.stack
                 .replace(/\n/gi, "")
                 .split(/\bat\b/)
@@ -217,7 +213,7 @@ var BJ_REPORT = (function(global) {
             return stack;
         },
         // 是否查过配置的最多重复上报次数
-        isRepeat: function(error) {
+        isRepeat: function (error) {
             if (!T.isOBJ(error)) return true;
             var msg = error.msg;
             var times = _log_map[msg] = (parseInt(_log_map[msg], 10) || 0) + 1;
@@ -228,9 +224,9 @@ var BJ_REPORT = (function(global) {
     // 保存原有全局onerror方法
     var orgError = global.onerror;
     // 重写 window.onerror
-    global.onerror = function(msg, url, line, col, error) {
+    global.onerror = function (msg, url, line, col, error) {
         var newMsg = msg;
-        // 使用 T.processStackMsg 格式化error的堆栈信息并缓存到newMsg
+        // 使用 T.processStackMsg将error的堆栈信息转为字符串并缓存到newMsg
         if (error && error.stack) {
             newMsg = T.processStackMsg(error);
         }
@@ -253,9 +249,7 @@ var BJ_REPORT = (function(global) {
         orgError && orgError.apply(global, arguments);
     };
 
-
-
-    var _report_log_tostring = function(error, index) {
+    var _report_log_tostring = function (error, index) {
         var param = [];
         var params = [];
         var stringify = [];
@@ -284,10 +278,8 @@ var BJ_REPORT = (function(global) {
         return [params.join("&"), stringify.join(","), param.join("&")];
     };
 
-
-
     var _offline_buffer = [];
-    var _save2Offline = function(key, msgObj) {
+    var _save2Offline = function (key, msgObj) {
         msgObj = T.extend({ id: _config.id, uin: _config.uin, time: new Date - 0 }, msgObj);
 
         if (Offline_DB.db) {
@@ -297,7 +289,7 @@ var BJ_REPORT = (function(global) {
 
 
         if (!Offline_DB.db && !_offline_buffer.length) {
-            Offline_DB.ready(function(err, DB) {
+            Offline_DB.ready(function (err, DB) {
                 if (DB) {
                     if (_offline_buffer.length) {
                         DB.addLogs(_offline_buffer);
@@ -310,10 +302,10 @@ var BJ_REPORT = (function(global) {
         _offline_buffer.push(msgObj);
     };
 
-    var _autoReportOffline = function() {
+    var _autoReportOffline = function () {
         var script = document.createElement("script");
         script.src = _config.offline_auto_url || _config.url.replace(/badjs$/, "offlineAuto") + "?id=" + _config.id + "&uin=" + _config.uin;
-        window._badjsOfflineAuto = function(isReport) {
+        window._badjsOfflineAuto = function (isReport) {
             if (isReport) {
                 BJ_REPORT.reportOfflineLog();
             }
@@ -321,36 +313,37 @@ var BJ_REPORT = (function(global) {
         document.head.appendChild(script);
     };
 
-
-
     var submit_log_list = [];
     var comboTimeout = 0;
-    var _submit_log = function() {
+    /** 
+     * 上报异常队列
+    */
+    var _submit_log = function () {
         clearTimeout(comboTimeout);
         // https://github.com/BetterJS/badjs-report/issues/34
         comboTimeout = 0;
-
+        // 没有上报队列则退出函数
         if (!submit_log_list.length) {
             return;
         }
-
+        // 拼接上报信息参数
         var url = _config._reportUrl + submit_log_list.join("&") + "&count=" + submit_log_list.length + "&_t=" + (+new Date);
-
+        // 如果没有设置自定义上报方式，默认使用new Image方式上报
         if (_config.submit) {
             _config.submit(url, submit_log_list);
         } else {
             var _img = new Image();
             _img.src = url;
         }
-
+        // 清空上报队列
         submit_log_list = [];
     };
 
-    var _process_log = function(isReportNow) {
+    var _process_log = function (isReportNow) {
+        // 是否设置了异常上班接口并完成初始化
         if (!_config._reportUrl) return;
-
+        // 根据设置的采样值随机生成是否忽略本次异常
         var randomIgnore = Math.random() >= _config.random;
-
 
         while (_log_list.length) {
             var isIgnore = false;
@@ -380,7 +373,6 @@ var BJ_REPORT = (function(global) {
             }
         }
 
-
         if (isReportNow) {
             _submit_log(); // 立即上报
         } else if (!comboTimeout) {
@@ -388,10 +380,11 @@ var BJ_REPORT = (function(global) {
         }
     };
 
-
-
     var report = global.BJ_REPORT = {
-        push: function(msg) { // 将错误推到缓存池
+        /** 
+         * 将错误推到缓存池 延迟上报
+        */
+        push: function (msg) {
 
             var data = T.isOBJ(msg) ? T.processError(msg) : {
                 msg: msg
@@ -423,13 +416,19 @@ var BJ_REPORT = (function(global) {
             _process_log();
             return report;
         },
-        report: function(msg, isReportNow) { // error report
+        /** 
+         * 手动主动上报错误
+        */
+        report: function (msg, isReportNow) {
             msg && report.push(msg);
 
             isReportNow && _process_log(true);
             return report;
         },
-        info: function(msg) { // info report
+        /** 
+         * info上报，用于记录操作日志
+        */
+        info: function (msg) { // info report
             if (!msg) {
                 return report;
             }
@@ -444,7 +443,10 @@ var BJ_REPORT = (function(global) {
             report.push(msg);
             return report;
         },
-        debug: function(msg) { // debug report
+        /**
+         * 可以结合实时上报，跟踪问题; 不存入存储
+        */
+        debug: function (msg) { // debug report
             if (!msg) {
                 return report;
             }
@@ -459,12 +461,15 @@ var BJ_REPORT = (function(global) {
             report.push(msg);
             return report;
         },
-        reportOfflineLog: function() {
+        /** 
+         * 上报离线日志  
+        */
+        reportOfflineLog: function () {
             if (!window.indexedDB) {
                 BJ_REPORT.info("unsupport offlineLog");
                 return;
             }
-            Offline_DB.ready(function(err, DB) {
+            Offline_DB.ready(function (err, DB) {
                 if (!DB) {
                     return;
                 }
@@ -475,7 +480,7 @@ var BJ_REPORT = (function(global) {
                     end: endDate,
                     id: _config.id,
                     uin: _config.uin
-                }, function(err, result) {
+                }, function (err, result) {
                     var iframe = document.createElement("iframe");
                     iframe.name = "badjs_offline_" + (new Date - 0);
                     iframe.frameborder = 0;
@@ -483,7 +488,7 @@ var BJ_REPORT = (function(global) {
                     iframe.width = 0;
                     iframe.src = "javascript:false;";
 
-                    iframe.onload = function() {
+                    iframe.onload = function () {
                         var form = document.createElement("form");
                         form.style.display = "none";
                         form.target = iframe.name;
@@ -501,7 +506,7 @@ var BJ_REPORT = (function(global) {
                         form.appendChild(input);
                         form.submit();
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             document.body.removeChild(iframe);
                         }, 10000);
 
@@ -511,7 +516,7 @@ var BJ_REPORT = (function(global) {
                 });
             });
         },
-        offlineLog: function(msg) {
+        offlineLog: function (msg) {
             if (!msg) {
                 return report;
             }
@@ -526,7 +531,10 @@ var BJ_REPORT = (function(global) {
             report.push(msg);
             return report;
         },
-        init: function(config) { // 初始化
+        /**
+         * 初始化
+        */
+        init: function (config) {
             if (T.isOBJ(config)) {
                 for (var key in config) {
                     _config[key] = config[key];
@@ -545,7 +553,7 @@ var BJ_REPORT = (function(global) {
                         _config.uin = parseInt((document.cookie.match(/\buin=\D+(\d+)/) || [])[1], 10);
                     }
                 }
-
+                // 设置异常上报的接口地址
                 _config._reportUrl = (_config.url || "/badjs") +
                     "?id=" + id +
                     "&uin=" + _config.uin +
@@ -561,11 +569,11 @@ var BJ_REPORT = (function(global) {
             // init offline
             if (!Offline_DB._initing) {
                 Offline_DB._initing = true;
-                Offline_DB.ready(function(err, DB) {
+                Offline_DB.ready(function (err, DB) {
                     if (DB) {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             DB.clearDB(_config.offlineLogExp);
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 _config.offlineLogAuto && _autoReportOffline();
                             }, 5000);
                         }, 1000);
@@ -583,8 +591,7 @@ var BJ_REPORT = (function(global) {
     };
 
 
-
-    typeof console !== "undefined" && console.error && setTimeout(function() {
+    typeof console !== "undefined" && console.error && setTimeout(function () {
         var err = ((location.hash || "").match(/([#&])BJ_ERROR=([^&$]+)/) || [])[2];
         err && console.error("BJ_ERROR", decodeURIComponent(err).replace(/(:\d+:\d+)\s*/g, "$1\n"));
     }, 0);
@@ -596,270 +603,3 @@ var BJ_REPORT = (function(global) {
 if (typeof module !== "undefined") {
     module.exports = BJ_REPORT;
 }
-
-// try.js
-;(function(global) {
-
-    if (!global.BJ_REPORT) {
-        console.error("please load bg-report first");
-        return;
-    }
-
-    var _onthrow = function(errObj) {
-        global.BJ_REPORT.push(errObj);
-    };
-
-    var tryJs = {};
-    global.BJ_REPORT.tryJs = function(throwCb) {
-        throwCb && (_onthrow = throwCb);
-        return tryJs;
-    };
-
-    // merge
-    var _merge = function(org, obj) {
-        for (var key in obj) {
-            org[key] = obj[key];
-        }
-    };
-
-    // function or not
-    var _isFunction = function(foo) {
-        return typeof foo === "function";
-    };
-
-    var timeoutkey;
-
-    var cat = function(foo, args) {
-        return function() {
-            try {
-                return foo.apply(this, args || arguments);
-            } catch (error) {
-
-                _onthrow(error);
-
-                //some browser throw error (chrome) , can not find error where it throw,  so print it on console;
-                if (error.stack && console && console.error) {
-                    console.error("[BJ-REPORT]", error.stack);
-                }
-
-                // hang up browser and throw , but it should trigger onerror , so rewrite onerror then recover it
-                if (!timeoutkey) {
-                    var orgOnerror = global.onerror;
-                    global.onerror = function() { };
-                    timeoutkey = setTimeout(function() {
-                        global.onerror = orgOnerror;
-                        timeoutkey = null;
-                    }, 50);
-                }
-                throw error;
-            }
-        };
-    };
-
-    var catArgs = function(foo) {
-        return function() {
-            var arg, args = [];
-            for (var i = 0, l = arguments.length; i < l; i++) {
-                arg = arguments[i];
-                _isFunction(arg) && (arg = cat(arg));
-                args.push(arg);
-            }
-            return foo.apply(this, args);
-        };
-    };
-
-    var catTimeout = function(foo) {
-        return function(cb, timeout) {
-            // for setTimeout(string, delay)
-            if (typeof cb === "string") {
-                try {
-                    cb = new Function(cb);
-                } catch (err) {
-                    throw err;
-                }
-            }
-            var args = [].slice.call(arguments, 2);
-            // for setTimeout(function, delay, param1, ...)
-            cb = cat(cb, args.length && args);
-            return foo(cb, timeout);
-        };
-    };
-
-    /**
-     * makeArgsTry
-     * wrap a function's arguments with try & catch
-     * @param {Function} foo
-     * @param {Object} self
-     * @returns {Function}
-     */
-    var makeArgsTry = function(foo, self) {
-        return function() {
-            var arg, tmp, args = [];
-            for (var i = 0, l = arguments.length; i < l; i++) {
-                arg = arguments[i];
-                if (_isFunction(arg)) {
-                    if (arg.tryWrap) {
-                        arg = arg.tryWrap;
-                    } else {
-                        tmp = cat(arg);
-                        arg.tryWrap = tmp;
-                        arg = tmp;
-                    }
-                }
-                args.push(arg);
-            }
-            return foo.apply(self || this, args);
-        };
-    };
-
-    /**
-     * makeObjTry
-     * wrap a object's all value with try & catch
-     * @param {Function} foo
-     * @param {Object} self
-     * @returns {Function}
-     */
-    var makeObjTry = function(obj) {
-        var key, value;
-        for (key in obj) {
-            value = obj[key];
-            if (_isFunction(value)) obj[key] = cat(value);
-        }
-        return obj;
-    };
-
-    /**
-     * wrap jquery async function ,exp : event.add , event.remove , ajax
-     * @returns {Function}
-     */
-    tryJs.spyJquery = function() {
-        var _$ = global.$;
-
-        if (!_$ || !_$.event) {
-            return tryJs;
-        }
-
-        var _add, _remove;
-        if (_$.zepto) {
-            _add = _$.fn.on, _remove = _$.fn.off;
-
-            _$.fn.on = makeArgsTry(_add);
-            _$.fn.off = function() {
-                var arg, args = [];
-                for (var i = 0, l = arguments.length; i < l; i++) {
-                    arg = arguments[i];
-                    _isFunction(arg) && arg.tryWrap && (arg = arg.tryWrap);
-                    args.push(arg);
-                }
-                return _remove.apply(this, args);
-            };
-
-        } else if (window.jQuery) {
-            _add = _$.event.add, _remove = _$.event.remove;
-
-            _$.event.add = makeArgsTry(_add);
-            _$.event.remove = function() {
-                var arg, args = [];
-                for (var i = 0, l = arguments.length; i < l; i++) {
-                    arg = arguments[i];
-                    _isFunction(arg) && arg.tryWrap && (arg = arg.tryWrap);
-                    args.push(arg);
-                }
-                return _remove.apply(this, args);
-            };
-        }
-
-        var _ajax = _$.ajax;
-
-        if (_ajax) {
-            _$.ajax = function(url, setting) {
-                if (!setting) {
-                    setting = url;
-                    url = undefined;
-                }
-                makeObjTry(setting);
-                if (url) return _ajax.call(_$, url, setting);
-                return _ajax.call(_$, setting);
-            };
-        }
-
-        return tryJs;
-    };
-
-    /**
-     * wrap amd or commonjs of function  ,exp :  define , require ,
-     * @returns {Function}
-     */
-    tryJs.spyModules = function() {
-        var _require = global.require,
-            _define = global.define;
-        if (_define && _define.amd && _require) {
-            global.require = catArgs(_require);
-            _merge(global.require, _require);
-            global.define = catArgs(_define);
-            _merge(global.define, _define);
-        }
-
-        if (global.seajs && _define) {
-            global.define = function() {
-                var arg, args = [];
-                for (var i = 0, l = arguments.length; i < l; i++) {
-                    arg = arguments[i];
-                    if (_isFunction(arg)) {
-                        arg = cat(arg);
-                        //seajs should use toString parse dependencies , so rewrite it
-                        arg.toString = (function(orgArg) {
-                            return function() {
-                                return orgArg.toString();
-                            };
-                        }(arguments[i]));
-                    }
-                    args.push(arg);
-                }
-                return _define.apply(this, args);
-            };
-
-            global.seajs.use = catArgs(global.seajs.use);
-
-            _merge(global.define, _define);
-        }
-
-        return tryJs;
-    };
-
-    /**
-     * wrap async of function in window , exp : setTimeout , setInterval
-     * @returns {Function}
-     */
-    tryJs.spySystem = function() {
-        global.setTimeout = catTimeout(global.setTimeout);
-        global.setInterval = catTimeout(global.setInterval);
-        return tryJs;
-    };
-
-    /**
-     * wrap custom of function ,
-     * @param obj - obj or  function
-     * @returns {Function}
-     */
-    tryJs.spyCustom = function(obj) {
-        if (_isFunction(obj)) {
-            return cat(obj);
-        } else {
-            return makeObjTry(obj);
-        }
-    };
-
-    /**
-     * run spyJquery() and spyModules() and spySystem()
-     * @returns {Function}
-     */
-    tryJs.spyAll = function() {
-        tryJs
-            .spyJquery()
-            .spyModules()
-            .spySystem();
-        return tryJs;
-    };
-
-}(window));
