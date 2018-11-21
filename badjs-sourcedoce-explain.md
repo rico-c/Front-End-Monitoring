@@ -2,7 +2,7 @@
 
 > bad.js是国内优秀的前端监控开源方案，由于公司业务需要近期一直在研究前端监控方案，在查阅bad.js源码的同时，顺便将源码的解析记录在这里，希望能给大家更多的帮助，如果有解释错误的地方请在issue提出。
 
-> 查看添加了完整注释的bad.js源代点击[这里](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/badjs-sourcecode-explain.js)
+> 查看添加了完整注释的bad.js源代点击[这里](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/badjs-sourcecode-explain.js)
 
 > 了解更多关于bad.js可以点击[bad.js-Github主页](https://github.com/BetterJS)。
 
