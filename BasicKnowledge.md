@@ -1,4 +1,6 @@
-<h1>前端监控知识点</h1>
+<h1 align="center">前端监控知识点</h1>
+
+>想了解笔者整理的腾讯开源前端监控方案[bad.js源码解析](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/badjs-sourcedoce-explain.md)可以点击查阅。
 
 ### 我们的目标是什么？
 将用户在使用网页服务时产生的影响用户体验的异常通过网络请求传回服务器，并进行可视化的展现，整个过程要求我们回传的错误信息包含错误类型、调用堆栈等错误信息以便开发人员定位错误。

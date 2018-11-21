@@ -11,7 +11,7 @@
 当然，还没有写完，喜欢的可以先Star一波~
 
 ### 目录
-[基础知识点](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/BasicKnowledge.md)
+[基础知识](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/BasicKnowledge.md)
 
 [腾讯开源前端监控bad.js源代码解析](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/badjs-sourcedoce-explain.md)
 
