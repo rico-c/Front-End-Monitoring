@@ -237,4 +237,16 @@ report: function (msg, isReportNow) {
 
 
 ### 总结
-bad.js还有离线上报功能，使用indexDB存储异常信息，这里不再分析，感兴趣的同学可以前往源码
+bad.js除此之外还有离线上报功能，使用indexDB存储异常信息，这里不再分析，感兴趣的同学可以前往源码查阅[点这里看完整带注释的源码](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/badjs-sourcecode-explain.js)
+
+bad.js已经几乎实现了onerror监控的全部功能，除此之外，针对VUE和React等MVVM框架我们可以使用框架提供的错误处理钩子函数，类如VUE的配置Vue.config.errorHandler，
+
+另外针对AJAX异常可以考虑重写XMLHttpRequest对象。
+
+针对静态资源的异常，可以使用
+```
+window.addEventListener('error', (error) => {
+  console.log(error);
+}, true)
+```
+在实际的异常捕获场景中，可能还需要根据情况配置延时上报、限制重复上报的情况，否则大量的无用的异常上报不仅增加对用户流量和服务器的压力，同时也增加了我们分析问题的精力。
