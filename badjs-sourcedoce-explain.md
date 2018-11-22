@@ -113,7 +113,7 @@ processStackMsg: function (error) {
 
 这里直接上一张对比图：
 
-![err6](/Users/rico/Desktop/my-project/IMGS/err6.jpg)
+![](https://github.com/RicardoCao-Biker/IMGS/blob/master/err6.jpg)
 
 可以看到，这时我们就拿到了可以定位到错误来源的格式化的堆栈信息。
 
@@ -236,6 +236,5 @@ report: function (msg, isReportNow) {
 手动将信息推入上报队列，并完成上报。
 
 
-
 ### 总结
-
+bad.js还有离线上报功能，使用indexDB存储异常信息，这里不再分析，感兴趣的同学可以前往源码
