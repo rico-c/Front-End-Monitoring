@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import echarts from 'echarts/lib/echarts';
+// 引入柱状图
+import 'echarts/lib/chart/bar';
+import 'echarts/lib/component/tooltip';
+import 'echarts/lib/component/title';
+
 
 class App extends Component {
+  componentDidMount() {
+    var myChart = echarts.init(document.getElementById('main'));
+    myChart.setOption({
+      xAxis: {
+        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+      },
+      yAxis: {
+      },
+      series: [{
+        name: '销量',
+        type: 'bar',
+        data: [5, 20, 36, 10, 10, 20]
+      }]
+    });
+  }
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <div></div>
+        <div id="main" style={{ width: 400, height: 400 }}></div>
       </div>
     );
   }
