@@ -6,7 +6,7 @@
 
 > 了解更多关于bad.js可以点击[bad.js-Github主页](https://github.com/BetterJS)。
 
-> 想了解笔者整理的[前端监控基础知识](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/BasicKnowledge.md)查阅可以点击查阅。
+> 想了解笔者整理的[前端监控基础知识](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/BasicKnowledge.md)可以点击查阅。
 
 ### 整体工作流程
 ![](https://ricardocao-biker.github.io/IMGS/badjs1.jpg)
