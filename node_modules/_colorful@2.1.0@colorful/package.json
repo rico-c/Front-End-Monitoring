@@ -1,0 +1,25 @@
+{
+  "name": "colorful",
+  "version": "2.1.0",
+  "description": "colorful if a terminal tool for colors",
+  "keywords": [
+    "color",
+    "ansi",
+    "256color",
+    "console",
+    "terminal"
+  ],
+  "author": {
+    "name": "Hsiaoming Yang",
+    "email": "lepture@me.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lepture/colorful.git"
+  },
+  "devDependencies": {
+    "jshint": "*"
+  },
+  "_from": "colorful@2.1.0",
+  "_resolved": "http://registry.npm.taobao.org/colorful/download/colorful-2.1.0.tgz"
+}

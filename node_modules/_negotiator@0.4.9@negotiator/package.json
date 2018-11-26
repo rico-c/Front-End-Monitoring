@@ -1,0 +1,37 @@
+{
+  "name": "negotiator",
+  "description": "HTTP content negotiation",
+  "version": "0.4.9",
+  "author": "Federico Romero <federico.romero@outboxlabs.com>",
+  "contributors": [
+    "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)"
+  ],
+  "repository": "jshttp/negotiator",
+  "keywords": [
+    "http",
+    "content negotiation",
+    "accept",
+    "accept-language",
+    "accept-encoding",
+    "accept-charset"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "istanbul": "~0.3.2",
+    "nodeunit": "0.8.x"
+  },
+  "scripts": {
+    "test": "nodeunit test",
+    "test-cov": "istanbul cover ./node_modules/nodeunit/bin/nodeunit test"
+  },
+  "engines": {
+    "node": ">= 0.6"
+  },
+  "main": "lib/negotiator.js",
+  "files": [
+    "lib",
+    "LICENSE"
+  ],
+  "_from": "negotiator@0.4.9",
+  "_resolved": "http://registry.npm.taobao.org/negotiator/download/negotiator-0.4.9.tgz"
+}

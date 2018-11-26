@@ -1,0 +1,38 @@
+{
+  "name": "less-loader",
+  "version": "2.2.3",
+  "author": "Tobias Koppers @sokra",
+  "description": "less loader module for webpack",
+  "scripts": {
+    "test": "node --no-deprecation node_modules/.bin/_mocha -R spec",
+    "test-source-map": "webpack --config test/sourceMap/webpack.config.js && open ./test/sourceMap/index.html"
+  },
+  "peerDependencies": {
+    "less": "^2.3.1"
+  },
+  "devDependencies": {
+    "css-loader": "^0.23.1",
+    "enhanced-require": "^0.5.0-beta6",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "less": "^2.6.1",
+    "mocha": "^2.4.5",
+    "raw-loader": "^0.5.1",
+    "should": "^8.3.0",
+    "webpack": "^1.12.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/webpack/less-loader.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "dependencies": {
+    "loader-utils": "^0.2.5"
+  },
+  "_from": "less-loader@2.2.3",
+  "_resolved": "http://registry.npm.taobao.org/less-loader/download/less-loader-2.2.3.tgz"
+}

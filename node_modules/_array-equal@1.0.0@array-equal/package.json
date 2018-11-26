@@ -1,0 +1,15 @@
+{
+  "name": "array-equal",
+  "description": "check if two arrays are equal",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "twitter": "https://twitter.com/jongleberry"
+  },
+  "license": "MIT",
+  "repository": "component/array-equal",
+  "_from": "array-equal@1.0.0",
+  "_resolved": "http://registry.npm.taobao.org/array-equal/download/array-equal-1.0.0.tgz"
+}
