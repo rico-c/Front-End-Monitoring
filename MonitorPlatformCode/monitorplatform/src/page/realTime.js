@@ -9,7 +9,6 @@ class RealTime extends Component {
             units: ['每5分钟', '每1小时', '每4小时', '每24小时'],
             currentUnit: '每5分钟'
         }
-        // this.changeCurrentUnit = this.changeCurrentUnit.bind(this);
     }
     changeCurrentUnit(item) {
         this.setState({
