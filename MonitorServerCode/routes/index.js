@@ -44,10 +44,9 @@ router.get('/api/realtime', function (req, res, next) {
   }
   let timeArea = new Date().getTime() - include;
   let sql = "SELECT * FROM errlist WHERE errTime > " + timeArea;
-  console.log(sql);
   connection.query(sql, function (error, results, fields) {
     if (error) throw error;
-    console.log(results);
+    res.send(results);
   });
 });
 
