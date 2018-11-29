@@ -7,18 +7,15 @@ var connection = mysql.createConnection({
   password: '0808',
   database: 'ErrMonitor'
 });
+connection.connect();
 
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Rico' });
 });
 router.get('/errMonitor', function (req, res, next) {
-  // console.log(req.query);
-  connection.connect();
-  connection.query('INSERT INTO `errlist` VALUES (1, "admin", "32", "admin", "32", "admin", "32");', function (err, rows, fields) {
-    if (err) throw err;
-    console.log('The solution is: ', rows[0].solution);
-  })
-  connection.end()
+  console.log(req.query);
+  let sql = "INSERT INTO `errlist` (msg,vueData,fromUrl,loginInfo,ua) VALUES ('" + req.query.msg[0] + "', '" + req.query.vueData[0] + "', '" + req.query.from[0] + "', '" + req.query.loginInfo[0] + "', '" + req.query.ua[0] + "');"
+  connection.query(sql)
 });
 
 module.exports = router;
