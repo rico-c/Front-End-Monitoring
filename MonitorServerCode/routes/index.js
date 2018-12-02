@@ -10,12 +10,21 @@ var connection = mysql.createConnection({
 connection.connect();
 
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Rico' });
+  res.render('index', { title: 'Rico前端监控接口' });
 });
 
 router.get('/errMonitor', function (req, res, next) {
   let now = new Date().getTime();
-  let sql = "INSERT INTO `errlist` (msg,vueData,fromUrl,loginInfo,ua,errTime) VALUES ('" + req.query.msg[0] + "', '" + req.query.vueData[0] + "', '" + req.query.from[0] + "', '" + req.query.loginInfo[0] + "', '" + req.query.ua[0] + "'," + now + ");"
+  let [type, msg, vueData, fromUrl, loginInfo, ua, apiParams] = [
+    req.query.type ? req.query.type[0] : '',
+    req.query.msg ? req.query.msg[0] : '',
+    req.query.vueData ? req.query.vueData[0] : '',
+    req.query.fromUrl ? req.query.fromUrl[0] : '',
+    req.query.loginInfo ? req.query.loginInfo[0] : '',
+    req.query.ua ? req.query.ua[0] : '',
+    req.query.apiParams ? req.query.apiParams[0] : '',
+  ]
+  let sql = "INSERT INTO `errlist` (type,msg,vueData,errUrl,loginInfo,ua,apiParams,errTime) VALUES ('" + type + "', '" + msg + "', '" + vueData + "', '" + fromUrl + "', '" + loginInfo + "', '" + ua + "', '" + apiParams + "'," + now + ");"
   console.log(sql);
   connection.query(sql)
 });
