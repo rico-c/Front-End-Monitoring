@@ -12,7 +12,7 @@ connection.connect();
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Rico前端监控接口' });
 });
-
+// 插入数据库错误信息
 router.get('/errMonitor', function (req, res, next) {
   let now = new Date().getTime();
   let [type, msg, vueData, fromUrl, loginInfo, ua, apiParams] = [
@@ -25,17 +25,16 @@ router.get('/errMonitor', function (req, res, next) {
     req.query.apiParams ? req.query.apiParams[0] : '',
   ]
   let sql = "INSERT INTO `errlist` (type,msg,vueData,errUrl,loginInfo,ua,apiParams,errTime) VALUES ('" + type + "', '" + msg + "', '" + vueData + "', '" + fromUrl + "', '" + loginInfo + "', '" + ua + "', '" + apiParams + "'," + now + ");"
-  console.log(sql);
   connection.query(sql)
 });
-
+// 实时统计各类报错数量
 router.get('/api/realtime', function (req, res, next) {
   let unit = req.query.unit;
   let include = Number;
+  let response = [];
+  let now = new Date().getTime();
+
   switch (unit) {
-    case '1min':
-      include = 60000;
-      break;
     case '5min':
       include = 300000;
       break;
@@ -51,12 +50,20 @@ router.get('/api/realtime', function (req, res, next) {
     default:
       include = 14400000;
   }
-  let timeArea = new Date().getTime() - include;
-  let sql = "SELECT * FROM errlist WHERE errTime > " + timeArea;
-  connection.query(sql, function (error, results, fields) {
-    if (error) throw error;
-    res.send(results);
-  });
+
+  let times = 30 * include;
+  while (times > 0) {
+    let sql = "SELECT count(*) as cnt FROM errlist WHERE errTime>=" + (now - times) + "&&errTime<=" + (now - times + include);
+    console.log(sql);
+    connection.query(sql, function (error, results, fields) {
+      if (error) throw error;
+      response.push(results[0].cnt);
+      if (response.length === 30) {
+        res.send(response)
+      }
+    });
+    times = times - include;
+  }
 });
 
 module.exports = router;
