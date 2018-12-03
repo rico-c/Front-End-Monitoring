@@ -63,7 +63,7 @@ class App extends Component {
               </Menu>
             </HashRouter>
           </Sider>
-          <Layout style={{ padding: '24px' }}>
+          <Layout style={{ padding: '14px' }}>
             <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
               {Main}
             </Content>
