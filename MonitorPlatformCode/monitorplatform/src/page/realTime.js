@@ -17,17 +17,7 @@ class RealTime extends Component {
     this.onChange = this.onChange.bind(this)
   }
   componentWillMount() {
-    Axios.get(realtime, {
-      params: {
-        unit: '4h'
-      }
-    })
-      .then((res) => {
-        if (res.status !== 200) return alert('网络错误');
-        this.setState({
-          Xdata1: res.data
-        })
-      })
+    this.getData()
   }
   getOption() {
     return {
@@ -83,6 +73,7 @@ class RealTime extends Component {
   onChange(e) {
     console.log(e.target.value)
     this.setState({ currentUnit: e.target.value }, () => {
+      console.log(this.state.currentUnit);
       let XUnit = [];
       let times = 29;
       let now = new Date().getTime();
@@ -104,14 +95,27 @@ class RealTime extends Component {
           unit = 300000;
       }
       while (times >= 0) {
-        XUnit.push(`${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date().getDay()]} ${new Date(now - unit * times).getHours()}:${new Date(now - unit * times).getMinutes().toString().padStart(2, '0')}`);
+        XUnit.push(`${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(now - unit * times).getDay()]} ${new Date(now - unit * times).getHours()}:${new Date(now - unit * times).getMinutes().toString().padStart(2, '0')}`);
         times--;
       }
       console.log(XUnit)
       this.setState({
         XUnit: XUnit
-      })
+      }, this.getData)
     })
+  }
+  getData() {
+    Axios.get(realtime, {
+      params: {
+        unit: this.state.currentUnit
+      }
+    })
+      .then((res) => {
+        if (res.status !== 200) return alert('网络错误');
+        this.setState({
+          Xdata1: res.data
+        })
+      })
   }
   render() {
     return (
