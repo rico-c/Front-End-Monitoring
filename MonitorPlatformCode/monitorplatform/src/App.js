@@ -51,12 +51,13 @@ class App extends Component {
                   <Menu.Item key="2">最新异常</Menu.Item>
                   <Menu.Item key="3">历史记录</Menu.Item>
                 </SubMenu>
-                <SubMenu key="sub2" title={<span><Icon type="dot-chart" />统计w数据</span>}>
+                <SubMenu key="sub2" title={<span><Icon type="dot-chart" />统计数据</span>}>
                   <Menu.Item key="4">历史故障率</Menu.Item>
                   <Menu.Item key="5">高故障率页面</Menu.Item>
                   <Menu.Item key="6">高故障率JS</Menu.Item>
                   <Menu.Item key="7">终端设备</Menu.Item>
                 </SubMenu>
+                <Menu.Item key="8"><span><Icon type="environment" />地域</span></Menu.Item>
                 <Menu.Item key="9"><span><Icon type="notification" />报警管理</span></Menu.Item>
                 <Menu.Item key="10"><Link to="/Setting"><span><Icon type="setting" />设置</span></Link></Menu.Item>
               </Menu>
