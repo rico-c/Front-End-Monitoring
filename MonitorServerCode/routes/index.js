@@ -31,7 +31,9 @@ router.get('/errMonitor', function (req, res, next) {
 router.get('/api/realtime', function (req, res, next) {
   let unit = req.query.unit;
   let include = Number;
-  let response = [];
+  let response1 = [];
+  let response2 = [];
+  let response3 = [];
   let now = new Date().getTime();
 
   switch (unit) {
@@ -53,15 +55,28 @@ router.get('/api/realtime', function (req, res, next) {
 
   let times = 30 * include;
   while (times > 0) {
-    let sql = "SELECT count(*) as cnt FROM errlist WHERE errTime>=" + (now - times) + "&&errTime<=" + (now - times + include);
-    console.log(sql);
-    connection.query(sql, function (error, results, fields) {
+    let sql1 = "SELECT count(*) as cnt FROM errlist WHERE errTime>=" + (now - times) + "&&errTime<=" + (now - times + include) + "&&type = 'jsRuntime'";
+    let sql2 = "SELECT count(*) as cnt FROM errlist WHERE errTime>=" + (now - times) + "&&errTime<=" + (now - times + include) + "&&type = 'sourceLoad'";
+    let sql3 = "SELECT count(*) as cnt FROM errlist WHERE errTime>=" + (now - times) + "&&errTime<=" + (now - times + include) + "&&type = 'apiRequest'";
+    connection.query(sql1, function (error, results, fields) {
       if (error) throw error;
-      response.push(results[0].cnt);
-      if (response.length === 30) {
-        res.send(response)
+      response1.push(results[0].cnt);
+    })
+    connection.query(sql2, function (error, results, fields) {
+      if (error) throw error;
+      response2.push(results[0].cnt);
+    })
+    connection.query(sql3, function (error, results, fields) {
+      if (error) throw error;
+      response3.push(results[0].cnt);
+      if (response3.length === 30) {
+        res.send({
+          jsRuntime: response1,
+          sourceLoad: response2,
+          apiRequest: response3
+        })
       }
-    });
+    })
     times = times - include;
   }
 });

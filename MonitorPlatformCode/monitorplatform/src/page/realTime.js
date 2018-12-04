@@ -17,15 +17,25 @@ class RealTime extends Component {
     this.onChange = this.onChange.bind(this)
   }
   componentWillMount() {
-    this.getData()
+    let XUnit = [];
+    let times = 29;
+    let now = new Date().getTime();
+    while (times >= 0) {
+      XUnit.push(`${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(now - 300000 * times).getDay()]} ${new Date(now - 300000 * times).getHours()}:${new Date(now - 300000 * times).getMinutes().toString().padStart(2, '0')}`);
+      times--;
+    }
+    this.setState({
+      XUnit: XUnit
+    }, this.getData)
   }
+
   getOption() {
     return {
       tooltip: {
         trigger: 'axis'
       },
       legend: {
-        data: ['JS异常']
+        data: ['JS异常', '静态资源异常', 'API异常']
       },
       grid: {
         left: '3%',
@@ -58,22 +68,20 @@ class RealTime extends Component {
           type: 'line',
           stack: '总量',
           areaStyle: { normal: {} },
-          data: this.state.Xdata1
+          data: this.state.Xdata2
         },
         {
           name: 'API异常',
           type: 'line',
           stack: '总量',
           areaStyle: { normal: {} },
-          data: this.state.Xdata1
+          data: this.state.Xdata3
         }
       ]
     }
   }
   onChange(e) {
-    console.log(e.target.value)
     this.setState({ currentUnit: e.target.value }, () => {
-      console.log(this.state.currentUnit);
       let XUnit = [];
       let times = 29;
       let now = new Date().getTime();
@@ -98,7 +106,7 @@ class RealTime extends Component {
         XUnit.push(`${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(now - unit * times).getDay()]} ${new Date(now - unit * times).getHours()}:${new Date(now - unit * times).getMinutes().toString().padStart(2, '0')}`);
         times--;
       }
-      console.log(XUnit)
+
       this.setState({
         XUnit: XUnit
       }, this.getData)
@@ -113,7 +121,9 @@ class RealTime extends Component {
       .then((res) => {
         if (res.status !== 200) return alert('网络错误');
         this.setState({
-          Xdata1: res.data
+          Xdata1: res.data.jsRuntime,
+          Xdata2: res.data.sourceLoad,
+          Xdata3: res.data.apiRequest
         })
       })
   }
