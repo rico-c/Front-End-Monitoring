@@ -4,6 +4,7 @@ import { Layout, Menu, Icon } from 'antd';
 import RealTime from './page/realTime.js'
 import Setting from './page/setting.js'
 import ErrDetail from './page/errDetail.js'
+import newErr from './page/errInfo/newErr.js'
 import './App.css';
 
 class App extends Component {
@@ -17,13 +18,14 @@ class App extends Component {
             <Route exact path="/" component={RealTime} />
             <Route path="/Setting" component={Setting} />
             <Route path="/ErrDetail" component={ErrDetail} />
+            <Route path="/newErr" component={newErr} />
           </Switch>
         </HashRouter>
       </div>
     )
 
     return (
-      <Layout style={{ height: '100vh' }}>
+      <Layout style={{ height: '100%' }}>
         <Header className="header">
           <div style={{ lineHeight: '64px', height: '64px', backgroundColor: '#000000' }}>
             <img
@@ -48,8 +50,8 @@ class App extends Component {
               >
                 <Menu.Item key="1"><Link to="/"><span><Icon type="rocket" />实时监控</span></Link></Menu.Item>
                 <SubMenu key="sub1" title={<span><Icon type="frown" />异常信息</span>}>
-                  <Menu.Item key="2">最新异常</Menu.Item>
-                  <Menu.Item key="3">历史记录</Menu.Item>
+                  <Menu.Item key="2"><Link to="/newErr">最新异常</Link></Menu.Item>
+                  <Menu.Item key="3"><Link to="/historyErr">历史记录</Link></Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub2" title={<span><Icon type="dot-chart" />统计数据</span>}>
                   <Menu.Item key="4">历史故障率</Menu.Item>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
-import { Menu, Dropdown, Button, Icon, message, Select, Radio } from 'antd';
+import { Radio, Progress } from 'antd';
 import Axios from 'axios';
 import { realtime } from '../API/api';
 
@@ -143,12 +143,11 @@ class RealTime extends Component {
           option={this.getOption()}
           style={{ height: '70vh', width: '100%', marginTop: '15px' }} />
 
-        <p style={{ width: '80%', left: '10%', position: 'relative' }}>采样率：
-          <span>100%</span>
-        </p>
-        <p style={{ width: '80%', left: '10%', position: 'relative' }}>限制重复上报次数：
-          <span>3</span>
-        </p>
+        <div style={{ marginLeft: '50px' }}>
+          <p style={{}}>采样率：
+          </p>
+          <Progress type="circle" percent={100} width={80} format={percent => `${percent}%`} />
+        </div>
       </div>
     )
   }
