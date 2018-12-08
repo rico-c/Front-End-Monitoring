@@ -19,3 +19,28 @@
 .inline{
     display: inline;
 }
+.itemInfo{
+    width: calc( 100% - 60px )
+}
+.typeIcon{
+    width: 50px;
+    height:50px;
+    color:white;
+    border-radius: 25px;
+    margin-right: 10px;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: center;
+}
+.typeIcon1{
+    background-color: #941100;
+}
+.typeIcon2{
+    background-color: #008F00;
+}
+.typeIcon3{
+    background-color: #0096FF;
+}
+.typeIcon4{
+    background-color: black;
+}
