@@ -1,0 +1,14 @@
+.icon{
+    color:#0096FF
+}
+.inlineIcon{
+    display: inline-block;
+    margin-bottom: 20px
+}
+.stackInfo{
+    margin-left: 50px;
+}
+.detailInfo>p{
+    width: 70%;
+    word-wrap:break-word;
+}

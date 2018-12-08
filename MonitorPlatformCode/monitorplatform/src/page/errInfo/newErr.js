@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { List, message, Avatar, Spin, Icon } from 'antd';
 import Axios from 'axios';
+import { Route, Switch, HashRouter, Link } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroller';
 import { getNewErr } from '../../API/api';
 import '../css/newErr.css';
@@ -85,23 +86,26 @@ class NewErr extends React.Component {
                     <List
                         dataSource={this.state.data}
                         renderItem={item => (
-                            <List.Item key={item.id}>
-                                <div>
-                                    {type(item)}
-                                </div>
-                                <div className="itemInfo">
-                                    <p><Icon type="code" /><span> 信息：{item.msg.substring(0, 350)}{item.msg.length >= 350 ? ' ......' : ''}</span></p>
-                                    <p><Icon type="paper-clip" /><span> 来源：{item.errUrl.substring(0, 120)}{item.errUrl.length >= 120 ? ' ......' : ''}</span></p>
-                                    <p className="subInfo">
-                                        <span className="inline"><Icon type="slack" /> 设备：
-                                        {os(item)}
-                                        </span>
-                                        <span><Icon type="user-add" /> 登录：{JSON.parse(item.loginInfo).status === 'login' ? '已登录' : '未登录'}</span>
-                                        <span><Icon type="compass" /> 位置：</span>
-                                        <span><Icon type="clock-circle" /> 时间戳：{(new Date(item.errTime)).toString()}</span>
-                                    </p>
-                                </div>
-                            </List.Item>
+                            <Link to={`/ErrDetail/${item.id}`}>
+                                <List.Item key={item.id} className="list_item">
+                                    <div>
+                                        {type(item)}
+                                    </div>
+                                    <div className="itemInfo">
+                                        <p><Icon type="code" /><span className='black'> 异常：{item.msg.substring(0, 350)}{item.msg.length >= 350 ? ' ......' : ''}</span></p>
+                                        <p><Icon type="paper-clip" /><span className='black'> 来源：{item.errUrl.substring(0, 120)}{item.errUrl.length >= 120 ? ' ......' : ''}</span></p>
+                                        <p className="subInfo">
+                                            <span className="inline"><Icon type="slack" /> <span className='black'>设备：
+                                             {os(item)}
+                                            </span>
+                                            </span>
+                                            <span><Icon type="user-add" /> <span className='black'>登录：{JSON.parse(item.loginInfo).status === 'login' ? '已登录' : '未登录'}</span></span>
+                                            <span><Icon type="compass" /> <span className='black'>位置：</span></span>
+                                            <span><Icon type="clock-circle" /> <span className='black'>时间戳：{(new Date(item.errTime)).toString()}</span></span>
+                                        </p>
+                                    </div>
+                                </List.Item>
+                            </Link>
                         )}
                     >
                         {this.state.loading && this.state.hasMore && (

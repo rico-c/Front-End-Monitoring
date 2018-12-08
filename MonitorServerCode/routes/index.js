@@ -94,5 +94,13 @@ router.get('/api/newErr', function (req, res, next) {
     res.send(results)
   })
 });
+// 根据Id获取异常
+router.get('/api/getErrById', function (req, res, next) {
+  let id = req.query.id;
+  let sql = `SELECT * FROM errlist WHERE id = ${id}`;
+  connection.query(sql, function (error, results, fields) {
+    res.send(results)
+  })
+});
 
 module.exports = router;

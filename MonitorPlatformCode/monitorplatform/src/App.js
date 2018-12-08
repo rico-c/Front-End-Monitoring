@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Route, Switch, HashRouter, Link } from 'react-router-dom';
 import { Layout, Menu, Icon } from 'antd';
-import RealTime from './page/realTime.js'
-import Setting from './page/setting.js'
-import ErrDetail from './page/errDetail.js'
-import newErr from './page/errInfo/newErr.js'
+import RealTime from './page/realTime.js';
+import Setting from './page/setting.js';
+import ErrDetail from './page/errDetail.js';
+import newErr from './page/errInfo/newErr.js';
+import AlertRule from './page/alertRule.js';
 import './App.css';
 
 class App extends Component {
@@ -17,8 +18,9 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={RealTime} />
             <Route path="/Setting" component={Setting} />
-            <Route path="/ErrDetail" component={ErrDetail} />
+            <Route path="/ErrDetail/:id" component={ErrDetail} />
             <Route path="/newErr" component={newErr} />
+            <Route path="/AlertRule" component={AlertRule} />
           </Switch>
         </HashRouter>
       </div>
@@ -60,7 +62,7 @@ class App extends Component {
                   <Menu.Item key="7">终端设备</Menu.Item>
                 </SubMenu>
                 <Menu.Item key="8"><span><Icon type="environment" />地域</span></Menu.Item>
-                <Menu.Item key="9"><span><Icon type="notification" />报警管理</span></Menu.Item>
+                <Menu.Item key="9"><Link to="/AlertRule"><span><Icon type="notification" />报警管理</span></Link></Menu.Item>
                 <Menu.Item key="10"><Link to="/Setting"><span><Icon type="setting" />设置</span></Link></Menu.Item>
               </Menu>
             </HashRouter>

@@ -44,3 +44,12 @@
 .typeIcon4{
     background-color: black;
 }
+.black{
+    color: black;
+}
+.itemInfo{
+    border-bottom: 1px solid #f5f5f5
+}
+.err_detail_wrapper{
+    height: 85vh
+}
