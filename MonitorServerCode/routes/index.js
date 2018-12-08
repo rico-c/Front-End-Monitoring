@@ -81,4 +81,18 @@ router.get('/api/realtime', function (req, res, next) {
   }
 });
 
+// 最新异常
+router.get('/api/newErr', function (req, res, next) {
+  let startId = req.query.startId;
+  let sql = '';
+  if (startId) {
+    sql = `SELECT * FROM errlist WHERE id BETWEEN ${Number(startId) - 15} AND ${Number(startId)} ORDER BY id DESC`
+  } else {
+    sql = `SELECT * FROM errlist ORDER BY id DESC LIMIt 15`
+  }
+  connection.query(sql, function (error, results, fields) {
+    res.send(results)
+  })
+});
+
 module.exports = router;

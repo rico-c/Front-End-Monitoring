@@ -1,0 +1,21 @@
+.infinite-container {
+  overflow: auto;
+  padding: 0px 24px;
+  height: 85vh;
+}
+.loading-container {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  text-align: center;
+}
+.ant-list-item-content{
+    width: 100%
+}
+.subInfo{
+    display: grid;
+    grid-template-columns: 18% 18% 18% 46%;
+}
+.inline{
+    display: inline;
+}
