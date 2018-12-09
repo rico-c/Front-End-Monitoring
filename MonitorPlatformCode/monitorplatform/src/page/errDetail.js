@@ -14,7 +14,7 @@ class errDetail extends Component {
             items: []
         }
     }
-    componentDidMount() {
+    componentDidMount = () => {
         Axios.get(getNewErrById, {
             params: {
                 id: this.props.match.params.id

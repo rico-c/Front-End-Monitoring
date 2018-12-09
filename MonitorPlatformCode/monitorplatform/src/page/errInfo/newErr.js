@@ -15,10 +15,9 @@ class NewErr extends React.Component {
             hasMore: true,
             startId: ''
         }
-        this.handleInfiniteOnLoad = this.handleInfiniteOnLoad.bind(this)
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         Axios.get(getNewErr)
             .then((res) => {
                 this.setNewStart(res.data[res.data.length - 1].id);
@@ -28,7 +27,7 @@ class NewErr extends React.Component {
             })
     }
 
-    handleInfiniteOnLoad() {
+    handleInfiniteOnLoad = () => {
         let data = this.state.data;
         this.setState({
             loading: true,
@@ -49,7 +48,7 @@ class NewErr extends React.Component {
     }
 
     // 滚动加载
-    setNewStart(Id) {
+    setNewStart = (Id) => {
         this.setState({ startId: Number(Id) - 1 })
     }
 
