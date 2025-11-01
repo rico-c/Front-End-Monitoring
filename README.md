@@ -17,3 +17,10 @@
 
 [bad.js源代码添加完整注释](https://github.com/RicardoCao-Biker/Front-End-Monitoring/blob/master/badjs-sourcecode-explain.js)
 
+
+
+### 我的其他作品
+
+学术编辑器，AI查重降重 [Voyagard](https://voyagard.com)
+优秀同传 [优秀同传](https://interpreter.youshowedu.com)
+出片APP [出片](https://chupian.app)
